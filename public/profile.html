@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Профиль</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+</head>
+<body>
+<div class="container">
+    <h1>Добро пожаловать в профиль!</h1>
+    <p>Вы успешно вошли в систему.</p>
+    <h2>Здесь вы можете изменить ваши данные</h2>
+    <form id="profileForm" method="POST" action="/profileUpdate">
+        <label for="username">Имя пользователя:</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Изменить данные</button>
+    </form>
+    <a href="/logout">Выйти</a>
+</div>
+<script src="javascripts/profileUpdate.js"></script>
+</body>
+</html>
