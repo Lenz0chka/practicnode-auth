@@ -18,10 +18,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: 'secret-key',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 }
 }))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.listen(process.env.PORT || 3000, () => {})
 
 module.exports = app;

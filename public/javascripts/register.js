@@ -3,6 +3,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
     const username = e.target.username.value.trim();
     const password = e.target.password.value.trim();
+    const roleId = e.target.role.value.trim();
 
     if (!username || !password) return;
 
@@ -10,7 +11,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         const response = await fetch('/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ username, password, roleId }),
         });
 
         const text = await response.text();
