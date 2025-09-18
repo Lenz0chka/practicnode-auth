@@ -68,13 +68,6 @@ User.belongsTo(Role, {foreignKey: 'roleId'} );
   }
 })();
 
-function isAuthenticated(req, res, next) {
-  if (req.session.user) {
-    return next();
-  }
-  res.redirect('/login');
-}
-
 router.get('/', (req, res) => {
   if (req.session.user) {
     res.redirect('/profile');
@@ -87,42 +80,44 @@ router.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/register.html'));
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register',
+    async (req,
+           res) => {
   const { username, password, roleId } = req.body;
-
   try {
     const role = await Role.findByPk(roleId);
     if (!role) {
       return res.status(400).send('Role not found');
     }
-
     const existingUser = await User.findOne({ where: { username } });
     if (existingUser) {
       return res.send('Пользователь с таким именем уже существует');
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
     await User.create({ username, password: hashedPassword, roleId: roleId });
-
     res.redirect('/login');
   } catch (err) {
     res.status(400).send('Ошибка регистрации: ' + err.message);
   }
 });
 
-
-router.get('/login', (req, res) => {
+router.get('/login',
+    (req, res) => {
   res.sendFile(path.join(__dirname, '../public/login.html'));
 });
 
-router.post('/login', async (req, res) => {
+router.post(
+    '/login',
+    async
+    (req,
+     res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({where: {username}, include: Role});
     if (user) {
       if (await bcrypt.compare(password, user.password)) {
-        req.session.user = { id: user.id, username: username, password: password, role: user.Role.name };
+        req.session.user =
+            { id: user.id, username: username, password: password, role: user.Role.name };
         res.redirect('/profile');
       }
     } else {
@@ -134,15 +129,21 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/profile', isAuthenticated, hasRole('Пользователь'), (req, res) => {
+router.get(
+    '/profile', isAuthorized,
+    hasRole('Пользователь'),
+    (req, res) => {
   res.sendFile(path.join(__dirname, '../public/profile.html'));
 });
 
-router.get('/admin', isAuthenticated, hasRole('Администратор'), (req, res) => {
+router.get(
+    '/admin', isAuthorized,
+    hasRole('Администратор'),
+    (req, res) => {
   res.sendFile(path.join(__dirname, '../public/adminpanel.html'));
 })
 
-router.post('/profileUpdate', isAuthenticated, hasRole('Пользователь'), async (req, res) => {
+router.post('/profileUpdate', isAuthorized, hasRole('Пользователь'), async (req, res) => {
   const { username, password } = req.body;
   const currentUser = req.session.user;
 
@@ -178,7 +179,9 @@ function isAuthorized(req, res, next) {
 function hasRole(roleName){
   return async (req, res, next) => {
     if(req.session.user){
-      const user = await User.findByPk(req.session.user.id, { include: Role});
+      const user = await User.findByPk(
+          req.session.user.id, { include: Role}
+      );
       if(user && user.Role.name === roleName){
         next();
       }
