@@ -108,8 +108,7 @@ router.get('/login',
 
 router.post(
     '/login',
-    async
-    (req,
+    async (req,
      res) => {
   const { username, password } = req.body;
   try {
