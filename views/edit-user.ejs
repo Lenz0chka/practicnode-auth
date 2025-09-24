@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Редактирование пользователя</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css"/>
+</head>
+<body>
+<div class="container">
+    <h1>Изменить пользователя</h1>
+    <form method="POST" action="/admin/edit-user/<%= user.id %>">
+        <label for="username">Имя пользователя:</label>
+        <input type="text" id="username" name="username" value="<%= user.username %>" required>
+
+        <label for="password">Пароль пользователя:</label>
+        <input type="password" id="password" name="password" value="<%= user.password %>" required>
+
+        <label for="role">Роль пользователя:</label>
+        <select id="role" name="roleId" required>
+            <% roles.forEach(role => { %>
+            <option value="<%= role.id %>" <%= role.id === user.roleId ? 'selected' : '' %>><%= role.name %></option>
+            <% }) %>
+        </select>
+
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+</body>
+</html>
